@@ -32,34 +32,32 @@ function initialiseBullwhip()
     var $oem = new tierSupplier(1, "OEM", $globalDemand, $tier1, $productionDataTable, $stockDataTable);
     
     var $interval = setInterval( function() {
-                                                if($timePeriod == 1)
-                                                {
-                                                    $globalDemand = 95;
-                                                }
-                                                
-                                                $oem.processTimePeriod($timePeriod, $globalDemand);
-                                                
-                                                var prodCSV = google.visualization.dataTableToCsv($productionDataTable);
-                                                console.log(prodCSV);
-                                                
-                                                var stockCSV = google.visualization.dataTableToCsv($stockDataTable);
-                                                console.log(stockCSV);
-                                                
-                                                // Update Chart
-                                                var prodChart = new google.visualization.LineChart(document.getElementById('prod_div'));
-                                                var stockChart = new google.visualization.LineChart(document.getElementById('stock_div'));
-                                                prodChart.draw($productionDataTable, $productionGraphOptions);
-                                                stockChart.draw($stockDataTable, $stockGraphOptions);
-                                                
-                                                // Increment Time Period
-                                                $timePeriod++;
-                                                
-                                                if( $timePeriod == $loopSize )
-                                                {
-                                                    clearInterval($interval);
-                                                }
-                                            }
-                                , 1000 );
+            if ($timePeriod == 1) {
+                $globalDemand = 95;
+            }
+
+            $oem.processTimePeriod($timePeriod, $globalDemand);
+
+            var prodCSV = google.visualization.dataTableToCsv($productionDataTable);
+            console.log(prodCSV);
+
+            var stockCSV = google.visualization.dataTableToCsv($stockDataTable);
+            console.log(stockCSV);
+
+            // Update Chart
+            var prodChart = new google.visualization.LineChart(document.getElementById('prod_div'));
+            var stockChart = new google.visualization.LineChart(document.getElementById('stock_div'));
+            prodChart.draw($productionDataTable, $productionGraphOptions);
+            stockChart.draw($stockDataTable, $stockGraphOptions);
+
+            // Increment Time Period
+            $timePeriod++;
+
+            if ($timePeriod == $loopSize) {
+                clearInterval($interval);
+            }
+        }
+        , 1000);
 }
 
 
@@ -81,8 +79,6 @@ function tierSupplier($position, $identifier, $demandLevel, $previousTier, $prod
 tierSupplier.prototype = {
   processTimePeriod: function($periodNumber, $revisedDemand)
   {
-
-      
       // Calculate required production level to maintain stock at demand level
       var $reqDemand = $revisedDemand - (this.$stock - $revisedDemand);
       this.$stock = $revisedDemand;
